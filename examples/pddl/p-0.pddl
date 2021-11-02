@@ -13,11 +13,11 @@
         (HANDEMPTY)
 
         ; initial assignment
-        (not_onBA)
-        (not_ontableC)
-        (not_Y-ontableC)
-        (not_onBA-and-Y-ontableC)
-        (not_once-tt)
+        (not (onBA))
+        (not (ontableC))
+        (not (Y-ontableC))
+        (not (onBA-and-Y-ontableC))
+        (not (once-tt))
 
         ; the environment starts
         (act)
