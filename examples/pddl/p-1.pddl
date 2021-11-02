@@ -15,8 +15,8 @@
         ; initial assignment
         (not (onBA))
         (not (ontableC))
-        (not (Y-ontableC))
-        (not (onBA-and-Y-ontableC))
+        (not (O-ontableC))
+        (not (onBA-and-O-ontableC))
         (not (once-tt))
 
         (not (act))
