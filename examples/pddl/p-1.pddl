@@ -17,7 +17,7 @@
         (not (ontableC))
         (not (O-ontableC))
         (not (onBA-and-O-ontableC))
-        (not (once-tt))
+        (not (O-tt))
 
         (not (act))
         (top)
