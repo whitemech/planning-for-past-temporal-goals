@@ -70,15 +70,15 @@ def predicates_or(formula: PLTLOr) -> Set[Predicate]:
 
 
 @predicates.register
-def predicates_not(_formula: PLTLNot) -> Set[Predicate]:
+def predicates_not(formula: PLTLNot) -> Set[Predicate]:
     """Compute predicate for a Not formula."""
-    return set()
+    return predicates(formula.argument)
 
 
 @predicates.register
 def predicates_before(formula: Before) -> Set[Predicate]:
     """Compute predicate for a Before (Yesterday) formula."""
-    quoted = Predicate(replace_symbols(to_string(formula.argument)))
+    quoted = Predicate(replace_symbols(to_string(formula)))
     sub = predicates_unaryop(formula)
     return sub.union({quoted})
 
@@ -91,7 +91,7 @@ def predicates_since(formula: Since) -> Set[Predicate]:
         tail = Since(*formula.operands[1:])
         return predicates(Since(head, tail))
     formula_name = replace_symbols(to_string(formula))
-    quoted = Predicate(formula_name)
+    quoted = Predicate(f"Y-{formula_name}")
     subsinces = predicates_binaryop(formula)
     return {quoted}.union(subsinces)
 
@@ -100,7 +100,7 @@ def predicates_since(formula: Since) -> Set[Predicate]:
 def predicates_once(formula: Once) -> Set[Predicate]:
     """Compute predicate for a Once formula."""
     formula_name = replace_symbols(to_string(formula))
-    quoted = Predicate(formula_name)
+    quoted = Predicate(f"Y-{formula_name}")
     sub = predicates_unaryop(formula)
     return sub.union({quoted})
 
@@ -108,7 +108,8 @@ def predicates_once(formula: Once) -> Set[Predicate]:
 @predicates.register
 def predicates_historically(formula: Historically) -> Set[Predicate]:
     """Compute predicate for a Historically formula."""
-    quoted = Predicate(f"Onot-{to_string(formula.argument)}")
+    formula_name = replace_symbols(to_string(formula))
+    quoted = Predicate(f"Y-{formula_name}")
     sub = predicates_unaryop(formula)
     return sub.union(
         {
