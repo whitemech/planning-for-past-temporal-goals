@@ -124,26 +124,12 @@ class Compiler:
 
     def _compile_domain(self):
         """Compute the new domain."""
-        act = Predicate("act")
-        new_predicates = predicates(self.formula).union(
-            {act}, val_predicates(self.formula)
-        )
-
+        new_predicates = predicates(self.formula).union(val_predicates(self.formula))
         new_derived_predicates = derived_predicates(
             self.formula, self.from_atoms_to_fluent
         )
-
-        domain_actions = _update_domain_actions(self.domain.actions, act)
-
         new_whens = _compute_whens(self.formula)
-        prog_action = Action(
-            name="prog",
-            parameters=[],
-            precondition=~act,
-            effect=And(*new_whens, act),
-        )
-
-        domain_actions = domain_actions.union({prog_action})
+        domain_actions = _update_domain_actions_det(self.domain.actions, new_whens)
 
         self._result_domain = Domain(
             name=self.domain.name,
@@ -165,10 +151,7 @@ class Compiler:
 
     def _compile_problem(self):
         """Compute the new problem."""
-        act = Predicate("act")
-
         new_init = set(self.problem.init)
-        new_init = new_init.union({act})
 
         self._result_problem = Problem(
             name=self.problem.name,
@@ -177,7 +160,7 @@ class Compiler:
             objects=[*self.problem.objects],
             init=new_init,
             goal=And(
-                Predicate(add_val_prefix(replace_symbols(to_string(self.formula)))), act
+                Predicate(add_val_prefix(replace_symbols(to_string(self.formula))))
             ),
         )
 
@@ -187,16 +170,18 @@ def _compute_whens(formula: Formula) -> Set[When]:
     return {When(Predicate(add_val_prefix(p.name)), p) for p in predicates(formula)}
 
 
-def _update_domain_actions(actions: AbstractSet[Action], act: Predicate) -> Set[Action]:
-    """Update domain actions."""
+def _update_domain_actions_det(
+    actions: AbstractSet[Action], progression: Set[When]
+) -> Set[Action]:
+    """Update domain action when domain is deterministic."""
     new_actions = set()
     for action in actions:
         new_actions.add(
             Action(
                 name=action.name,
                 parameters=[*action.parameters],
-                precondition=And(action.precondition, act),
-                effect=AndEffect(action.effect, Not(act)),
+                precondition=And(action.precondition),
+                effect=AndEffect(action.effect, *progression),
             )
         )
     return new_actions

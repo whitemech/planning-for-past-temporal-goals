@@ -6,7 +6,7 @@
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
-*.log
+#*.log
 *.lot
 *.fls
 *.out
@@ -776,3 +776,13 @@ policy.fsap
 policy.out
 sas_plan
 elapsed.time
+formula.pltlf
+formula.ltlf
+new-domain.pddl
+new-problem.pddl
+output.tsv
+results/
+!final_results/**/**/output.log
+!final_results/**/**/**/**/output.sas
+!final_results/**/**/**/output.tsv
+!supplementary-material/results
