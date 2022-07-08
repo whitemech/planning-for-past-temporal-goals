@@ -11,7 +11,9 @@ from tempfile import TemporaryDirectory
 SUPPORTED_PLANNERS = {
     "fd",
     "mynd",
-    "paladinus"
+    "paladinus",
+    "ff",
+    "planner"
 }
 
 BIN_DIR = Path(inspect.getframeinfo(inspect.currentframe()).filename).parent
@@ -25,16 +27,31 @@ PACKAGE_ROOT = Path(inspect.getframeinfo(inspect.currentframe()).filename).paren
 FD_DIR = REPO_ROOT / "third_party" / "downward"
 FD_DRIVER = (FD_DIR / "fast-downward.py").resolve()
 
+### NEW STUFF ###
+
+FF_WRAPPER_PATH = BIN_DIR / "ff_wrapper"
+FF_DIR = REPO_ROOT / "third_party" / "fastforward"
+FF_DRIVER = (FF_DIR / "ff").resolve()
+
+PLANNER_WRAPPER = BIN_DIR / "planner_wrapper"
+PLANNER_DIR = REPO_ROOT / "third_party" / "planner"
+#OPTIMAL_PLANNER_DRIVER = (OPTIMAL_PLANNER_DIR / "delfi1.img").resolve()
+#OPTIMAL_PLANNER_DRIVER = (OPTIMAL_PLANNER_DIR / "delfi1.img").resolve()
+
+#################
+
 MYND_JAR = (REPO_ROOT / "third_party" / "mynd.jar").resolve()
 MYND_DIR = (REPO_ROOT / "third_party" / "myND").resolve()  # type: ignore
 MYND_SRC_DIR = MYND_DIR / "src"
 
-PALADINUS_JAR = (REPO_ROOT / "third_party" / "paladinus0.1.jar").resolve()
+PALADINUS_JAR = (REPO_ROOT / "third_party" / "paladinus" / "paladinus0.1.jar").resolve()
 PALADINUS_DIR = (REPO_ROOT / "third_party" / "paladinus").resolve()  # type: ignore
 
 OUTPUT_DIR = REPO_ROOT
 
 PLTLF_WRAPPER_PATH = BIN_DIR / "pltlf-planner"
+
+PLTLF_WRAPPER_PATH_GG = BIN_DIR / "pltl_compiler_ce"
 
 LTLFOND2FOND_DIR = (REPO_ROOT / "third_party" / "ltlfond2fond").resolve()  # type: ignore
 

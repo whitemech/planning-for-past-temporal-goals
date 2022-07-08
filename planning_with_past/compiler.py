@@ -36,10 +36,12 @@ from planning_with_past.helpers.utils import (
     add_val_prefix,
     default_mapping,
     replace_symbols,
+    remove_before_prefix,
 )
 from planning_with_past.utils.derived_visitor import derived_predicates
 from planning_with_past.utils.predicates_visitor import predicates
 from planning_with_past.utils.val_predicates_visitor import val_predicates
+from planning_with_past.utils.rewrite_formula_visitor import rewrite
 
 
 class Compiler:
@@ -62,7 +64,7 @@ class Compiler:
         """
         self.domain = domain
         self.problem = problem
-        self.formula = formula
+        self.formula = rewrite(formula)
         if from_atoms_to_fluent:
             self.from_atoms_to_fluent = from_atoms_to_fluent
             self.validate_mapping(domain, formula, from_atoms_to_fluent)
@@ -167,7 +169,8 @@ class Compiler:
 
 def _compute_whens(formula: Formula) -> Set[When]:
     """Compute conditional effects for formula progression."""
-    return {When(Predicate(add_val_prefix(p.name)), p) for p in predicates(formula)}
+    return {When(Predicate(add_val_prefix(remove_before_prefix(p.name))), p) for p in predicates(formula)}.union(
+        When(Not(Predicate(add_val_prefix(remove_before_prefix(p.name)))), Not(p)) for p in predicates(formula))
 
 
 def _update_domain_actions_det(
